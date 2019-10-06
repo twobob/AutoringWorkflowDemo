@@ -4,6 +4,6 @@
 [DisallowMultipleComponent]
 [RequireComponent(typeof(TargetAuthoring))]
 [RequireComponent(typeof(AttackAuthoring))]
-public class AttackSystemAuthoring : MonoBehaviour
+public class CanAttack : MonoBehaviour
 {
 }

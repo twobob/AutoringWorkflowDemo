@@ -2,6 +2,6 @@
 
 [DisallowMultipleComponent]
 [RequireComponent(typeof(HealthAuthoring), typeof(CanDieAuthoring))]
-public class DeathSystemAuthoring : MonoBehaviour
+public class CanDie : MonoBehaviour
 {
 }

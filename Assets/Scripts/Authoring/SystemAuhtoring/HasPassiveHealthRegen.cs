@@ -2,6 +2,6 @@
 
 [DisallowMultipleComponent]
 [RequireComponent(typeof(HealthAuthoring), typeof(HealthRegenAuthoring))]
-public class HealthRegenSystemAuthoring : MonoBehaviour
+public class HasPassiveHealthRegen : MonoBehaviour
 {
 }

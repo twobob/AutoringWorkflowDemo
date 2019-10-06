@@ -19,9 +19,10 @@ public class AuthoringComponentInspector : EditorWindow
     private int cachedGoComponentCount;
 
     /// <summary>
-    /// Should the data components be automaticaly synchronized ?
+    /// Should the data components be automaticaly synchronized?
     /// </summary>
     private bool autoSync = false;
+
 
     private class AuthoringComponentMapping
     {
@@ -55,12 +56,12 @@ public class AuthoringComponentInspector : EditorWindow
         if (Selection.activeGameObject == null) return;
 
         int activeGoComponentCount = Selection.activeGameObject.GetComponents(typeof(MonoBehaviour)).Length;
-        if ( cachedGoComponentCount != activeGoComponentCount)
+        if (cachedGoComponentCount != activeGoComponentCount)
         {
             RefreshInspector();
             cachedGoComponentCount = activeGoComponentCount;
         }
-            
+
     }
 
 
@@ -79,11 +80,11 @@ public class AuthoringComponentInspector : EditorWindow
 
         foreach (var tfem in TextFieldAuthoringComponentMap)
         {
-            if(tfem.Value.tf != null)
+            if (tfem.Value.tf != null)
             {
-                    tfem.Value.tf.UnregisterValueChangedCallback(ChangeAuthoringComponentValue);
+                tfem.Value.tf.UnregisterValueChangedCallback(ChangeAuthoringComponentValue);
             }
-            if(tfem.Value.objectField != null)
+            if (tfem.Value.objectField != null)
             {
                 tfem.Value.objectField.UnregisterValueChangedCallback(ChangeAuthoringPrefab);
             }
@@ -96,7 +97,7 @@ public class AuthoringComponentInspector : EditorWindow
         {
             SyncAuthoringComponents();
         }
-      
+
 
     }
 
@@ -115,7 +116,7 @@ public class AuthoringComponentInspector : EditorWindow
 
 
         Label label = new Label(Selection.activeGameObject.name);
-        
+
         rootVisualElement.Add(label);
 
         // Allow manaul sync if autoSync is disabled
@@ -128,8 +129,8 @@ public class AuthoringComponentInspector : EditorWindow
 
         // Display a foldout for each data component of the game object.
         DisplayAuthoringComponents();
-    
-        
+
+
     }
 
     private void SyncAuthoringComponents()
@@ -146,11 +147,11 @@ public class AuthoringComponentInspector : EditorWindow
             foreach (var requiredAttribute in RequireComponent.GetCustomAttributes(requieringType, typeof(RequireComponent)))
             {
                 Type requiredType = ((RequireComponent)requiredAttribute).m_Type0;
-                if (requiredType != null) RegisterRequierment(RequiredAuthoringComponentsTypes,  requieringType, requiredAttribute, requiredType);
+                if (requiredType != null) RegisterRequierment(RequiredAuthoringComponentsTypes, requieringType, requiredAttribute, requiredType);
                 requiredType = ((RequireComponent)requiredAttribute).m_Type1;
-                if (requiredType != null) RegisterRequierment(RequiredAuthoringComponentsTypes,  requieringType, requiredAttribute, requiredType);
+                if (requiredType != null) RegisterRequierment(RequiredAuthoringComponentsTypes, requieringType, requiredAttribute, requiredType);
                 requiredType = ((RequireComponent)requiredAttribute).m_Type2;
-                if (requiredType != null) RegisterRequierment(RequiredAuthoringComponentsTypes,  requieringType, requiredAttribute, requiredType);
+                if (requiredType != null) RegisterRequierment(RequiredAuthoringComponentsTypes, requieringType, requiredAttribute, requiredType);
             }
         }
 
@@ -162,7 +163,8 @@ public class AuthoringComponentInspector : EditorWindow
             {
                 DestroyImmediate(activeGo.GetComponent(dataComponent.GetType()));
             }
-            else { 
+            else
+            {
                 existingDataComponents.Add(dataComponent.GetType());
             }
         }
@@ -175,6 +177,10 @@ public class AuthoringComponentInspector : EditorWindow
             {
                 activeGo.AddComponent(requiredComponent);
             }
+
+
+
+
         }
 
         // Disable refresh if autoSync is active to avoid a infinite loop and stack overflow.
@@ -182,7 +188,7 @@ public class AuthoringComponentInspector : EditorWindow
         {
             RefreshInspector();
         }
-        
+
     }
 
     private static void RegisterRequierment(List<Type> RequiredAuthoringComponentsTypes, Type requieringType, Attribute requiredAttribute, Type requiredType)
@@ -204,7 +210,7 @@ public class AuthoringComponentInspector : EditorWindow
                 f.text = authoringComponent.GetType().ToString();
 
                 // Add a text field for each attribute of the authoring component
-                if(DisplayAuthoringComponentAttributes(authoringComponent, f))
+                if (DisplayAuthoringComponentAttributes(authoringComponent, f))
                 {
                     rootVisualElement.Add(f);
                 }
@@ -212,7 +218,7 @@ public class AuthoringComponentInspector : EditorWindow
         }
     }
 
-    private bool DisplayAuthoringComponentAttributes(IConvertGameObjectToEntity authoringComponent,Foldout foldout)
+    private bool DisplayAuthoringComponentAttributes(IConvertGameObjectToEntity authoringComponent, Foldout foldout)
     {
         bool hasAttributes = false;
         foreach (MemberInfo prop in authoringComponent.GetType().GetTypeInfo().GetMembers())
@@ -223,7 +229,7 @@ public class AuthoringComponentInspector : EditorWindow
             {
                 if (!properties.ContainsKey(prop.Name))
                 {
-    
+
                     FieldInfo fi = authoringComponent.GetType().GetField(prop.Name);
                     if (fi.FieldType != typeof(GameObject))
                     {
@@ -232,7 +238,7 @@ public class AuthoringComponentInspector : EditorWindow
                         tf.SetValueWithoutNotify(fi.GetValue(authoringComponent).ToString());
 
                         tf.tooltip = fi.FieldType.ToString();
-                         
+
                         AuthoringComponentMapping acm = new AuthoringComponentMapping();
                         acm.authoringComponent = authoringComponent;
                         acm.fieldInfo = fi;
@@ -243,7 +249,7 @@ public class AuthoringComponentInspector : EditorWindow
                         tf.RegisterValueChangedCallback(ChangeAuthoringComponentValue);
 
                         foldout.Add(tf);
-                        
+
                     }
                     else
                     {
@@ -270,7 +276,7 @@ public class AuthoringComponentInspector : EditorWindow
                     hasAttributes = true;
                 }
             }
-          
+
         }
         return hasAttributes;
     }
@@ -302,14 +308,14 @@ public class AuthoringComponentInspector : EditorWindow
         {
             TextFieldAuthoringComponentMap[tfid].tf.value = evt.previousValue;
         }
-              
+
     }
 
     private void GetAuthoringComponents(GameObject activeGo)
     {
         IConvertGameObjectToEntity[] comps = activeGo.GetComponents<IConvertGameObjectToEntity>();
         List<IConvertGameObjectToEntity> ECSComponents = new List<IConvertGameObjectToEntity>(comps);
-  
+
         for (int i = 0; i < ECSComponents.Count; ++i)
         {
 
@@ -331,6 +337,6 @@ public class AuthoringComponentInspector : EditorWindow
 
     private int AlphabeticOrder(IConvertGameObjectToEntity x, IConvertGameObjectToEntity y)
     {
-       return x.GetType().Name.CompareTo(y.GetType().Name);
+        return x.GetType().Name.CompareTo(y.GetType().Name);
     }
 }

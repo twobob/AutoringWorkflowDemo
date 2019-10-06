@@ -4,7 +4,7 @@ using Unity.Entities;
 using Unity.Mathematics;
 
 [Serializable]
-public struct CanDie : IComponentData
+public struct CanDieTag : IComponentData
 {
     
 }
