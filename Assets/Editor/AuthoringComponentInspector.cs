@@ -100,7 +100,7 @@ public class AuthoringComponentInspector : EditorWindow
 
         if (AutoSync)
         {
-            SyncAuthoringComponents();
+            DataComponentModifier.Synchronize();
         }
 
 
@@ -140,53 +140,7 @@ public class AuthoringComponentInspector : EditorWindow
 
     private void SyncAuthoringComponents()
     {
-        var activeGo = Selection.activeGameObject;
-        if (activeGo == null) return;
-
-        // Get the list of required data components
-        List<Type> RequiredAuthoringComponentsTypes = new List<Type>();
-        var components = activeGo.GetComponents(typeof(MonoBehaviour));
-        foreach (var mono in components)
-        {
-            Type requieringType = mono.GetType();
-            foreach (var requiredAttribute in RequireComponent.GetCustomAttributes(requieringType, typeof(RequireComponent)))
-            {
-                Type requiredType = ((RequireComponent)requiredAttribute).m_Type0;
-                if (requiredType != null) RegisterRequierment(RequiredAuthoringComponentsTypes, requieringType, requiredAttribute, requiredType);
-                requiredType = ((RequireComponent)requiredAttribute).m_Type1;
-                if (requiredType != null) RegisterRequierment(RequiredAuthoringComponentsTypes, requieringType, requiredAttribute, requiredType);
-                requiredType = ((RequireComponent)requiredAttribute).m_Type2;
-                if (requiredType != null) RegisterRequierment(RequiredAuthoringComponentsTypes, requieringType, requiredAttribute, requiredType);
-            }
-        }
-
-        // remove un necessary components
-        var existingDataComponents = new List<Type>();
-        foreach (var dataComponent in activeGo.GetComponents(typeof(IConvertGameObjectToEntity)))
-        {
-            if (!RequiredAuthoringComponentsTypes.Contains(dataComponent.GetType()))
-            {
-                DestroyImmediate(activeGo.GetComponent(dataComponent.GetType()));
-            }
-            else
-            {
-                existingDataComponents.Add(dataComponent.GetType());
-            }
-        }
-
-        // Add missing required data components
-        foreach (var requiredComponent in RequiredAuthoringComponentsTypes)
-        {
-
-            if (!existingDataComponents.Contains(requiredComponent))
-            {
-                activeGo.AddComponent(requiredComponent);
-            }
-
-
-
-
-        }
+        DataComponentModifier.Synchronize();
 
         // Disable refresh if autoSync is active to avoid a infinite loop and stack overflow.
         if (!AutoSync)
@@ -195,15 +149,7 @@ public class AuthoringComponentInspector : EditorWindow
         }
 
     }
-
-    private static void RegisterRequierment(List<Type> RequiredAuthoringComponentsTypes, Type requieringType, Attribute requiredAttribute, Type requiredType)
-    {
-        if (((RequireComponent)requiredAttribute).m_Type0 != null)
-        {
-            RequiredAuthoringComponentsTypes.Add(requiredType);
-        }
-    }
-
+    
     private void DisplayAuthoringComponents()
     {
 

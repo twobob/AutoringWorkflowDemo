@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System;
+using UnityEditor;
 using UnityEngine;
 
 // Create a new type of Settings Asset.
@@ -8,7 +9,10 @@ class AuthoringComponentInspectorSettings : ScriptableObject
 
     [SerializeField]
     private bool autoSync;
-    
+
+    [SerializeField]
+    private bool autoHide;
+
     internal static AuthoringComponentInspectorSettings GetOrCreateSettings()
     {
         var settings = AssetDatabase.LoadAssetAtPath<AuthoringComponentInspectorSettings>(k_MyCustomSettingsPath);
@@ -16,6 +20,7 @@ class AuthoringComponentInspectorSettings : ScriptableObject
         {
             settings = ScriptableObject.CreateInstance<AuthoringComponentInspectorSettings>();
             settings.autoSync = false;
+            settings.autoHide = false;
             AssetDatabase.CreateAsset(settings, k_MyCustomSettingsPath);
             AssetDatabase.SaveAssets();
         }
@@ -30,5 +35,10 @@ class AuthoringComponentInspectorSettings : ScriptableObject
     internal static SerializedObject GetSerializedSettings()
     {
         return new SerializedObject(GetOrCreateSettings());
+    }
+
+    internal static void ChangeAutoHide(bool newValue)
+    {
+        AssetDatabase.LoadAssetAtPath<AuthoringComponentInspectorSettings>(k_MyCustomSettingsPath).autoHide = newValue;
     }
 }

@@ -27,7 +27,14 @@ static class AuthoringComponentInspectorSettingsRegister
                 };
                 rootElement.Add(autoSyncVE);
 
-                autoSyncVE.RegisterValueChangedCallback(ChangeAutoSync);
+                Toggle autoHideVE = new Toggle("Hide/Show data component in the inspector")
+                {
+                    value = settings.FindProperty("autoHide").boolValue,
+                    tooltip = "When true, data components with a hideFlag of None will be set to HideInInspector. When false, data components with a hideFlag of HideInInspector will be set to None."
+                };
+                rootElement.Add(autoHideVE);
+
+                autoHideVE.RegisterValueChangedCallback(ChangeAutoHide);
             },
 
             // Populate the search keywords to enable smart search filtering and label highlighting:
@@ -40,5 +47,10 @@ static class AuthoringComponentInspectorSettingsRegister
     private static void ChangeAutoSync(ChangeEvent<bool> evt)
     {
         AuthoringComponentInspectorSettings.ChangeAutoSync(evt.newValue);
+    }
+
+    private static void ChangeAutoHide(ChangeEvent<bool> evt)
+    {
+        AuthoringComponentInspectorSettings.ChangeAutoHide(evt.newValue);
     }
 }
