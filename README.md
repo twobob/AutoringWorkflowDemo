@@ -32,5 +32,5 @@
 - Open the Windows > AuthoringComponentInspector : 
   - this will provide a list of all data component with editable properties (synch with the calsic inspector)
   - The AuthoringComponentInspector has a button to synchronize the authoring components of the game object with this inspector. It take into account newly added data component, removing the non required data component from the game object itself and add missing one if and exisitng custom authoring component was updated.
-  - The sync can be made automatic, just edit the script Editor > AuthoringComponentInspector to set autoSync = true.
+  - The sync can be made automatic within the Project Settings > Authoring Component Inspector Settings > Automaticaly sychronize data component
   - To clean the calssic inspector, you can HideInInspector the generated data components
