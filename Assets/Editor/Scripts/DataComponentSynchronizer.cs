@@ -69,8 +69,6 @@ class DataComponentModifier
         var existingDataComponents = new List<Type>();
         foreach (var dataComponent in activeGo.GetComponents(typeof(IConvertGameObjectToEntity)))
         {
-            Debug.Log($"{dataComponent.GetType()} -> {activeGo.GetComponent(dataComponent.GetType()).hideFlags}");
-
             if (!RequiredAuthoringComponentsTypes.Contains(dataComponent.GetType()))
             {
                 EditorWindow.DestroyImmediate(activeGo.GetComponent(dataComponent.GetType()));

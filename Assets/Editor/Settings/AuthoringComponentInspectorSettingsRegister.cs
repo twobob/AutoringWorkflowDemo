@@ -27,6 +27,8 @@ static class AuthoringComponentInspectorSettingsRegister
                 };
                 rootElement.Add(autoSyncVE);
 
+                autoSyncVE.RegisterValueChangedCallback(ChangeAutoSync);
+
                 Toggle autoHideVE = new Toggle("Hide/Show data component in the inspector")
                 {
                     value = settings.FindProperty("autoHide").boolValue,
@@ -35,10 +37,8 @@ static class AuthoringComponentInspectorSettingsRegister
                 rootElement.Add(autoHideVE);
 
                 autoHideVE.RegisterValueChangedCallback(ChangeAutoHide);
-            },
+            }
 
-            // Populate the search keywords to enable smart search filtering and label highlighting:
-            keywords = new HashSet<string>(new[] { "sychronize", "Authoring", "Inspector" })
         };
 
         return provider;

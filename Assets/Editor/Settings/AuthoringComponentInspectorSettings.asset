@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1a158bf727c0e442911d4bba0c3af32, type: 3}
   m_Name: AuthoringComponentInspectorSettings
   m_EditorClassIdentifier: 
-  autoSync: 1
+  autoSync: 0
+  autoHide: 0

@@ -1,11 +1,10 @@
-﻿using System;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 
 // Create a new type of Settings Asset.
 class AuthoringComponentInspectorSettings : ScriptableObject
 {
-    public const string k_MyCustomSettingsPath = "Assets/Editor/AuthoringComponentInspectorSettings.asset";
+    public const string k_MyCustomSettingsPath = "Assets/Editor/Settings/AuthoringComponentInspectorSettings.asset";
 
     [SerializeField]
     private bool autoSync;
