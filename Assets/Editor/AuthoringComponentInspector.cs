@@ -10,18 +10,16 @@ using UnityEngine.UIElements;
 
 public class AuthoringComponentInspector : EditorWindow
 {
-
     private List<IConvertGameObjectToEntity> AuthoringComponents = new List<IConvertGameObjectToEntity>();
 
     private Dictionary<string, AuthoringComponentMapping> TextFieldAuthoringComponentMap = new Dictionary<string, AuthoringComponentMapping>();
 
+    private bool AutoSync { get => AuthoringComponentInspectorSettings.GetSerializedSettings().FindProperty("autoSync").boolValue; }
+
+    private bool CachedAutoSync = false;
 
     private int cachedGoComponentCount;
 
-    /// <summary>
-    /// Should the data components be automaticaly synchronized?
-    /// </summary>
-    private bool autoSync = false;
 
 
     private class AuthoringComponentMapping
@@ -52,6 +50,7 @@ public class AuthoringComponentInspector : EditorWindow
 
     private void OnInspectorUpdate()
     {
+     
 
         if (Selection.activeGameObject == null) return;
 
@@ -60,6 +59,12 @@ public class AuthoringComponentInspector : EditorWindow
         {
             RefreshInspector();
             cachedGoComponentCount = activeGoComponentCount;
+        }
+
+        if (AutoSync != CachedAutoSync)
+        {
+            CachedAutoSync = AutoSync;
+            RefreshInspector();
         }
 
     }
@@ -93,7 +98,7 @@ public class AuthoringComponentInspector : EditorWindow
         TextFieldAuthoringComponentMap.Clear();
         AuthoringComponents.Clear();
 
-        if (autoSync)
+        if (AutoSync)
         {
             SyncAuthoringComponents();
         }
@@ -120,7 +125,7 @@ public class AuthoringComponentInspector : EditorWindow
         rootVisualElement.Add(label);
 
         // Allow manaul sync if autoSync is disabled
-        if (!autoSync)
+        if (!AutoSync)
         {
             Button cleanButeon = new Button(SyncAuthoringComponents);
             cleanButeon.text = "Synch Authoring Components";
@@ -184,7 +189,7 @@ public class AuthoringComponentInspector : EditorWindow
         }
 
         // Disable refresh if autoSync is active to avoid a infinite loop and stack overflow.
-        if (!autoSync)
+        if (!AutoSync)
         {
             RefreshInspector();
         }
