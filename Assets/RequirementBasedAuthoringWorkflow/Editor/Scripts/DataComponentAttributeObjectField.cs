@@ -9,6 +9,7 @@ public class DataComponentAttributeObjectField : VisualElement
 {
     FieldInfo targetField;
     IConvertGameObjectToEntity dataComponent;
+    ObjectField of;
 
     public DataComponentAttributeObjectField(FieldInfo targetField, IConvertGameObjectToEntity dataComponent, string label)
     {
@@ -19,6 +20,8 @@ public class DataComponentAttributeObjectField : VisualElement
         of.objectType = typeof(GameObject);
         of.SetValueWithoutNotify((GameObject)targetField.GetValue(dataComponent));
         of.RegisterValueChangedCallback(ChangeDataComponentAttribute);
+
+        this.of = of;
 
         Add(of);
     }

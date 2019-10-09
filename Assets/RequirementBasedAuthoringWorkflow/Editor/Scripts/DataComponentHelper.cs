@@ -20,7 +20,7 @@ class DataComponentHelper
     {
         if (AutoSync)
         {
-            ActualizeRequieredDataComponents();
+            ActualizeRequieredDataComponentsOnGameObject();
         }
         HideOrShowCOmponentData();
         
@@ -44,7 +44,7 @@ class DataComponentHelper
         }
     }
 
-    internal static void ActualizeRequieredDataComponents()
+    internal static void ActualizeRequieredDataComponentsOnGameObject()
     {
 
         var activeGo = Selection.activeGameObject;

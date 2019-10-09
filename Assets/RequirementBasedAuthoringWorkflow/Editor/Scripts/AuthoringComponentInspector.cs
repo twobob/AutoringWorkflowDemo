@@ -98,12 +98,6 @@ public class AuthoringComponentInspector : EditorWindow
         TextFieldAuthoringComponentMap.Clear();
         AuthoringComponents.Clear();
 
-        if (AutoSync)
-        {
-            DataComponentHelper.ActualizeRequieredDataComponents();
-        }
-
-
     }
 
     private void RefreshInspector()
@@ -140,14 +134,11 @@ public class AuthoringComponentInspector : EditorWindow
 
     private void SyncAuthoringComponents()
     {
-        DataComponentHelper.ActualizeRequieredDataComponents();
-
-        // Disable refresh if autoSync is active to avoid a infinite loop and stack overflow.
+        DataComponentHelper.ActualizeRequieredDataComponentsOnGameObject();
         if (!AutoSync)
         {
             RefreshInspector();
         }
-
     }
 
     private void DisplayAuthoringComponents()
