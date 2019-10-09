@@ -2,6 +2,6 @@
 
 [DisallowMultipleComponent]
 [RequireComponent(typeof(HealthAuthoring), typeof(CanDieAuthoring))]
-public class CanDie : MonoBehaviour
+public class CanDie : RequirementBasedAuthoringComponent
 {
 }

@@ -4,6 +4,7 @@
 [DisallowMultipleComponent]
 [RequireComponent(typeof(TargetAuthoring))]
 [RequireComponent(typeof(AttackAuthoring))]
-public class CanAttack : MonoBehaviour
+public class CanAttack : RequirementBasedAuthoringComponent
 {
+    public int val;
 }

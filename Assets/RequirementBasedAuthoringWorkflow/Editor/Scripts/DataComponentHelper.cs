@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using Unity.Entities;
 using UnityEditor;
  using UnityEngine;
- [InitializeOnLoad]
-class DataComponentModifier
+using UnityEngine.UIElements;
+
+[InitializeOnLoad]
+class DataComponentHelper
 {
     private static bool AutoSync { get => AuthoringComponentInspectorSettings.GetSerializedSettings().FindProperty("autoSync").boolValue; }
     private static bool AutoHide { get => AuthoringComponentInspectorSettings.GetSerializedSettings().FindProperty("autoHide").boolValue; }
 
-    static DataComponentModifier()
+    static DataComponentHelper()
     {
         EditorApplication.update += Update;
     }
@@ -18,7 +20,7 @@ class DataComponentModifier
     {
         if (AutoSync)
         {
-            Synchronize();
+            ActualizeRequieredDataComponents();
         }
         HideOrShowCOmponentData();
         
@@ -42,7 +44,7 @@ class DataComponentModifier
         }
     }
 
-    internal static void Synchronize()
+    internal static void ActualizeRequieredDataComponents()
     {
 
         var activeGo = Selection.activeGameObject;
@@ -54,15 +56,7 @@ class DataComponentModifier
         foreach (var mono in components)
         {
             Type requieringType = mono.GetType();
-            foreach (var requiredAttribute in RequireComponent.GetCustomAttributes(requieringType, typeof(RequireComponent)))
-            {
-                Type requiredType = ((RequireComponent)requiredAttribute).m_Type0;
-                if (requiredType != null) RegisterRequierment(RequiredAuthoringComponentsTypes, requieringType, requiredAttribute, requiredType);
-                requiredType = ((RequireComponent)requiredAttribute).m_Type1;
-                if (requiredType != null) RegisterRequierment(RequiredAuthoringComponentsTypes, requieringType, requiredAttribute, requiredType);
-                requiredType = ((RequireComponent)requiredAttribute).m_Type2;
-                if (requiredType != null) RegisterRequierment(RequiredAuthoringComponentsTypes, requieringType, requiredAttribute, requiredType);
-            }
+            RequiredAuthoringComponentsTypes.AddRange(GetRequieredTypes(requieringType));
         }
 
         // remove un necessary components
@@ -91,13 +85,20 @@ class DataComponentModifier
         }
     }
 
-    private static void RegisterRequierment(List<Type> RequiredAuthoringComponentsTypes, Type requieringType, Attribute requiredAttribute, Type requiredType)
+    internal static List<Type> GetRequieredTypes(Type requieringType)
     {
-        if (((RequireComponent)requiredAttribute).m_Type0 != null)
+        List<Type> typesRequiredByComponent = new List<Type>();
+
+        foreach (var requiredAttribute in Attribute.GetCustomAttributes(requieringType, typeof(RequireComponent)))
         {
-            RequiredAuthoringComponentsTypes.Add(requiredType);
+            RequireComponent requiredType = (RequireComponent)requiredAttribute;
+            if (requiredType.m_Type0 != null) typesRequiredByComponent.Add(requiredType.m_Type0);
+            if (requiredType.m_Type1 != null) typesRequiredByComponent.Add(requiredType.m_Type1);
+            if (requiredType.m_Type2 != null) typesRequiredByComponent.Add(requiredType.m_Type2);
         }
+        return typesRequiredByComponent;
     }
+
 
 
 

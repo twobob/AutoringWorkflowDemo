@@ -50,7 +50,7 @@ public class AuthoringComponentInspector : EditorWindow
 
     private void OnInspectorUpdate()
     {
-     
+
 
         if (Selection.activeGameObject == null) return;
 
@@ -100,7 +100,7 @@ public class AuthoringComponentInspector : EditorWindow
 
         if (AutoSync)
         {
-            DataComponentModifier.Synchronize();
+            DataComponentHelper.ActualizeRequieredDataComponents();
         }
 
 
@@ -140,7 +140,7 @@ public class AuthoringComponentInspector : EditorWindow
 
     private void SyncAuthoringComponents()
     {
-        DataComponentModifier.Synchronize();
+        DataComponentHelper.ActualizeRequieredDataComponents();
 
         // Disable refresh if autoSync is active to avoid a infinite loop and stack overflow.
         if (!AutoSync)
@@ -149,7 +149,7 @@ public class AuthoringComponentInspector : EditorWindow
         }
 
     }
-    
+
     private void DisplayAuthoringComponents()
     {
 
