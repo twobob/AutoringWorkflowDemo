@@ -22,10 +22,12 @@ class DataComponentHelper
         {
             ActualizeRequieredDataComponentsOnGameObject();
         }
-        HideOrShowCOmponentData();
-        
+        HideOrShowCOmponentData();        
     }
 
+    /// <summary>
+    /// Will hide or show the currently selected gameobject's component implementing the IConvertGameObjectToEntity interface.
+    /// </summary>
     private static void HideOrShowCOmponentData()
     {
         var activeGo = Selection.activeGameObject;
@@ -44,6 +46,10 @@ class DataComponentHelper
         }
     }
 
+    /// <summary>
+    /// Will add to the game object  missing requiered component implementing the IConvertGameObjectToEntity interface.
+    /// Will remove from the game object component implementing the IConvertGameObjectToEntity interface that are no onger required.
+    /// </summary>
     internal static void ActualizeRequieredDataComponentsOnGameObject()
     {
 
@@ -85,6 +91,11 @@ class DataComponentHelper
         }
     }
 
+    /// <summary>
+    /// List all the required types for a given component type.
+    /// </summary>
+    /// <param name="requieringType"></param>
+    /// <returns></returns>
     internal static List<Type> GetRequieredTypes(Type requieringType)
     {
         List<Type> typesRequiredByComponent = new List<Type>();
@@ -92,9 +103,9 @@ class DataComponentHelper
         foreach (var requiredAttribute in Attribute.GetCustomAttributes(requieringType, typeof(RequireComponent)))
         {
             RequireComponent requiredType = (RequireComponent)requiredAttribute;
-            if (requiredType.m_Type0 != null) typesRequiredByComponent.Add(requiredType.m_Type0);
-            if (requiredType.m_Type1 != null) typesRequiredByComponent.Add(requiredType.m_Type1);
-            if (requiredType.m_Type2 != null) typesRequiredByComponent.Add(requiredType.m_Type2);
+            if (requiredType.m_Type0 != null && typeof(IConvertGameObjectToEntity).IsAssignableFrom(requiredType.m_Type0)) typesRequiredByComponent.Add(requiredType.m_Type0);
+            if (requiredType.m_Type1 != null && typeof(IConvertGameObjectToEntity).IsAssignableFrom(requiredType.m_Type1)) typesRequiredByComponent.Add(requiredType.m_Type1);
+            if (requiredType.m_Type2 != null && typeof(IConvertGameObjectToEntity).IsAssignableFrom(requiredType.m_Type2)) typesRequiredByComponent.Add(requiredType.m_Type2);
         }
         return typesRequiredByComponent;
     }
