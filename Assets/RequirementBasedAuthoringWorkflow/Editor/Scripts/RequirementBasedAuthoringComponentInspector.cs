@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using Unity.Entities;
 using UnityEditor;
 using UnityEngine.UIElements;
@@ -9,8 +10,6 @@ public class RequirementBasedAuthoringComponentInspector : Editor
 {
 
     private List<IConvertGameObjectToEntity> AuthoringComponents = new List<IConvertGameObjectToEntity>();
-
-    private Dictionary<string, AuthoringComponentMapping> TextFieldAuthoringComponentMap = new Dictionary<string, AuthoringComponentMapping>();
 
     VisualElement root;
 
