@@ -22,13 +22,13 @@ public static class VisualeElementExtensions
                     {
                         DataComponentAttributeTextField dcatf = new DataComponentAttributeTextField(fi, authoringComponent, prop.Name);
                         ve.Add(dcatf);
-                        DataComponentHelper.AddAttributeMapping(fi, dcatf, ve.text);
+                        DataComponentHelper.AddAttributeMapping(fi, dcatf);
                     }
                     else
                     {
                         DataComponentAttributeObjectField dcaof = new DataComponentAttributeObjectField(fi, authoringComponent, prop.Name);
                         ve.Add(dcaof);
-                        DataComponentHelper.AddAttributeMapping(fi, dcaof,ve.text);
+                        DataComponentHelper.AddAttributeMapping(fi, dcaof);
                     }
                 }
             }

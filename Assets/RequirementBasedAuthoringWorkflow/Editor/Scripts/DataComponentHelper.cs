@@ -4,7 +4,6 @@ using System.Reflection;
 using Unity.Entities;
 using UnityEditor;
  using UnityEngine;
-using UnityEngine.UIElements;
 
 [InitializeOnLoad]
 class DataComponentHelper
@@ -14,7 +13,7 @@ class DataComponentHelper
 
     private  static Dictionary<FieldInfo,HashSet<DataComponentAttributeField>> AtrtributeVisualElementMap = new Dictionary<FieldInfo, HashSet<DataComponentAttributeField>>();
 
-    public static void AddAttributeMapping(FieldInfo fi, DataComponentAttributeField ve,string name)
+    public static void AddAttributeMapping(FieldInfo fi, DataComponentAttributeField ve)
     {
         if (!AtrtributeVisualElementMap.ContainsKey(fi))
         {
@@ -24,7 +23,11 @@ class DataComponentHelper
         {
             AtrtributeVisualElementMap[fi].Add(ve);
         }
-        Debug.Log($"Added {name} for {fi.Name}");
+    }
+
+    private void OnSelectionChange()
+    {
+        AtrtributeVisualElementMap.Clear();
     }
 
     static DataComponentHelper()
@@ -34,8 +37,6 @@ class DataComponentHelper
 
     internal static void Refresh(FieldInfo targetField)
     {
-
-        Debug.Log($"Refresh {targetField.Name}");
         foreach (DataComponentAttributeField ve in AtrtributeVisualElementMap[targetField])
         {
             ve.Refresh();
@@ -81,7 +82,6 @@ class DataComponentHelper
 
         var activeGo = Selection.activeGameObject;
         if (activeGo == null) return;
-        AtrtributeVisualElementMap.Clear();
         // Get the list of required data components
         List<Type> RequiredAuthoringComponentsTypes = new List<Type>();
         var components = activeGo.GetComponents(typeof(MonoBehaviour));

@@ -1,9 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Unity.Entities;
 using UnityEditor;
-using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -12,8 +10,7 @@ public class AuthoringComponentInspector : EditorWindow
 {
     private List<IConvertGameObjectToEntity> AuthoringComponents = new List<IConvertGameObjectToEntity>();
 
-    private Dictionary<string, AuthoringComponentMapping> TextFieldAuthoringComponentMap = new Dictionary<string, AuthoringComponentMapping>();
-
+ 
     private bool AutoSync { get => AuthoringComponentInspectorSettings.GetSerializedSettings().FindProperty("autoSync").boolValue; }
 
     private bool CachedAutoSync = false;
@@ -22,14 +19,7 @@ public class AuthoringComponentInspector : EditorWindow
 
 
 
-    private class AuthoringComponentMapping
-    {
-        public TextField tf;
-        public ObjectField objectField;
-        public IConvertGameObjectToEntity authoringComponent;
-        public FieldInfo fieldInfo;
-    }
-
+    
     [MenuItem("Window/AuthoringComponentInspector")]
     public static void ShowExample()
     {
@@ -83,19 +73,6 @@ public class AuthoringComponentInspector : EditorWindow
     {
         rootVisualElement.Clear();
 
-        foreach (var tfem in TextFieldAuthoringComponentMap)
-        {
-            if (tfem.Value.tf != null)
-            {
-                tfem.Value.tf.UnregisterValueChangedCallback(ChangeAuthoringComponentValue);
-            }
-            if (tfem.Value.objectField != null)
-            {
-                tfem.Value.objectField.UnregisterValueChangedCallback(ChangeAuthoringPrefab);
-            }
-        }
-
-        TextFieldAuthoringComponentMap.Clear();
         AuthoringComponents.Clear();
 
     }
@@ -175,44 +152,17 @@ public class AuthoringComponentInspector : EditorWindow
                     FieldInfo fi = authoringComponent.GetType().GetField(prop.Name);
                     if (fi.FieldType != typeof(GameObject))
                     {
-                        TextField tf = new TextField(prop.Name);
-                        tf.name = GUID.Generate().ToString();
-                        tf.SetValueWithoutNotify(fi.GetValue(authoringComponent).ToString());
-
-                        tf.tooltip = fi.FieldType.ToString();
-
-                        AuthoringComponentMapping acm = new AuthoringComponentMapping();
-                        acm.authoringComponent = authoringComponent;
-                        acm.fieldInfo = fi;
-                        acm.tf = tf;
-
-                        TextFieldAuthoringComponentMap.Add(tf.name, acm);
-
-                        tf.RegisterValueChangedCallback(ChangeAuthoringComponentValue);
-
+                        DataComponentAttributeTextField tf = new DataComponentAttributeTextField(fi, authoringComponent, prop.Name);
                         foldout.Add(tf);
+                        DataComponentHelper.AddAttributeMapping(fi, tf);
 
                     }
                     else
                     {
 
-
-                        ObjectField gameObjectPicker = new ObjectField(prop.Name);
-                        gameObjectPicker.name = GUID.Generate().ToString();
-                        gameObjectPicker.objectType = fi.FieldType;
-                        gameObjectPicker.SetValueWithoutNotify((GameObject)fi.GetValue(authoringComponent));
-
-
-                        AuthoringComponentMapping acm = new AuthoringComponentMapping();
-                        acm.authoringComponent = authoringComponent;
-                        acm.fieldInfo = fi;
-                        acm.objectField = gameObjectPicker;
-
-                        TextFieldAuthoringComponentMap.Add(gameObjectPicker.name, acm);
-
+                        DataComponentAttributeObjectField gameObjectPicker = new DataComponentAttributeObjectField(fi, authoringComponent, prop.Name);
                         foldout.Add(gameObjectPicker);
-
-                        gameObjectPicker.RegisterValueChangedCallback(ChangeAuthoringPrefab);
+                        DataComponentHelper.AddAttributeMapping(fi, gameObjectPicker);
 
                     }
                     hasAttributes = true;
@@ -223,35 +173,6 @@ public class AuthoringComponentInspector : EditorWindow
         return hasAttributes;
     }
 
-    private void ChangeAuthoringPrefab(ChangeEvent<UnityEngine.Object> evt)
-    {
-        var ofid = ((ObjectField)evt.target).name;
-        if (!TextFieldAuthoringComponentMap.ContainsKey(ofid)) return;
-        FieldInfo fi = TextFieldAuthoringComponentMap[ofid].fieldInfo;
-        IConvertGameObjectToEntity authoringComponent = TextFieldAuthoringComponentMap[ofid].authoringComponent;
-
-        fi.SetValue(authoringComponent, Convert.ChangeType(evt.newValue, fi.FieldType));
-    }
-
-
-    private void ChangeAuthoringComponentValue(ChangeEvent<string> evt)
-    {
-        var tfid = ((TextField)evt.target).name;
-        if (!TextFieldAuthoringComponentMap.ContainsKey(tfid)) return;
-        FieldInfo fi = TextFieldAuthoringComponentMap[tfid].fieldInfo;
-        IConvertGameObjectToEntity authoringComponent = TextFieldAuthoringComponentMap[tfid].authoringComponent;
-        try
-        {
-            fi.SetValue(authoringComponent, Convert.ChangeType(evt.newValue, fi.FieldType));
-        }
-#pragma warning disable 168
-        catch (Exception e)
-#pragma warning restore 168
-        {
-            TextFieldAuthoringComponentMap[tfid].tf.value = evt.previousValue;
-        }
-
-    }
 
     private void GetAuthoringComponents(GameObject activeGo)
     {

@@ -10,6 +10,7 @@ public class DataComponentAttributeObjectField : DataComponentAttributeField
     FieldInfo targetField;
     IConvertGameObjectToEntity dataComponent;
     ObjectField of;
+
     public DataComponentAttributeObjectField(FieldInfo targetField, IConvertGameObjectToEntity dataComponent, string label)
     {
         this.targetField = targetField;
@@ -31,8 +32,8 @@ public class DataComponentAttributeObjectField : DataComponentAttributeField
 
     private void ChangeDataComponentAttribute(ChangeEvent<UnityEngine.Object> evt)
     {
-        var ofid = ((ObjectField)evt.target).name;
         targetField.SetValue(dataComponent, Convert.ChangeType(evt.newValue, targetField.FieldType));
+        DataComponentHelper.Refresh(targetField);
     }
 
 }
