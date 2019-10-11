@@ -36,8 +36,9 @@ class AuthoringComponentInspectorSettings : ScriptableObject
         return new SerializedObject(GetOrCreateSettings());
     }
 
-    internal static void ChangeAutoHide(bool newValue)
+    internal void ChangeAutoHide(bool newValue)
     {
-        AssetDatabase.LoadAssetAtPath<AuthoringComponentInspectorSettings>(k_MyCustomSettingsPath).autoHide = newValue;
+        this.autoHide = newValue;
+        AssetDatabase.SaveAssets();
     }
 }

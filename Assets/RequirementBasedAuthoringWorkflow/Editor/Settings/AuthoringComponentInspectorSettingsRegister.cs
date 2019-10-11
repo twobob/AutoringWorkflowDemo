@@ -5,6 +5,8 @@ using UnityEngine.UIElements;
 // Register a SettingsProvider using UIElements for the drawing framework:
 static class AuthoringComponentInspectorSettingsRegister
 {
+    static SerializedObject settings;
+
     [SettingsProvider]
     public static SettingsProvider CreateMyCustomSettingsProvider()
     {
@@ -16,7 +18,7 @@ static class AuthoringComponentInspectorSettingsRegister
             // activateHandler is called when the user clicks on the Settings item in the Settings window.
             activateHandler = (searchContext, rootElement) =>
             {
-                var settings = AuthoringComponentInspectorSettings.GetSerializedSettings();
+                settings = AuthoringComponentInspectorSettings.GetSerializedSettings();
 
                
 
@@ -46,11 +48,14 @@ static class AuthoringComponentInspectorSettingsRegister
 
     private static void ChangeAutoSync(ChangeEvent<bool> evt)
     {
-        AuthoringComponentInspectorSettings.ChangeAutoSync(evt.newValue);
+
+        settings.FindProperty("autoSync").boolValue = evt.newValue;
+        settings.ApplyModifiedProperties();
     }
 
     private static void ChangeAutoHide(ChangeEvent<bool> evt)
     {
-        AuthoringComponentInspectorSettings.ChangeAutoHide(evt.newValue);
+        settings.FindProperty("autoHide").boolValue = evt.newValue;
+        settings.ApplyModifiedProperties();
     }
 }
