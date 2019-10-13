@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "com.unity.entities": "0.1.1-preview",
+    "com.wayngroup.requirementworkflow": "https://github.com/WAYNGROUP/UnityPackage-RequirementBasedAuthoringWorkflow.git",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.androidjni": "1.0.0",
     "com.unity.modules.animation": "1.0.0",
@@ -32,5 +33,11 @@
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
     "com.unity.modules.xr": "1.0.0"
+  },
+  "lock": {
+    "com.wayngroup.requirementworkflow": {
+      "revision": "HEAD",
+      "hash": "5db4614f1651080159621a53149597807c0a5880"
+    }
   }
 }
